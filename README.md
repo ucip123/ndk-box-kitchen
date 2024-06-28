@@ -1,4 +1,4 @@
-# ndk-box-kitchen
+l# ndk-box-kitchen
 
 This repo is the kitchen used to create headers and Makefiles for building BusyBox with the command [`ndk-build`](https://developer.android.com/ndk/guides/ndk-build.html) in NDK. Scripts in this repo expect to run on Linux, however the generated code and Makefiles can be used on all NDK supported platforms.
 
@@ -8,8 +8,8 @@ Clone the following repos:
 
 ```
 git clone https://git.busybox.net/busybox/
-git clone https://github.com/topjohnwu/selinux jni/selinux
-git clone https://android.googlesource.com/platform/external/pcre jni/pcre
+git clone https://github.com/eraselk/selinux jni/selinux
+git clone https://github.com/eraselk/pcre jni/pcre
 ```
 
 Currently, the script supports BusyBox version `1.36.1`, please checkout to the correct tags before running scripts
