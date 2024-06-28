@@ -24,7 +24,7 @@ jobs:
          
       - name: setup package
         run: |
-         sudo apt update -y && sudo apt upgrade -y && sudo apt install -y wget unzip zip git openssl openssh glibc-source
+         sudo apt update -y && sudo apt upgrade -y
          
       - name: Download NDK
         run: |
@@ -65,7 +65,7 @@ jobs:
         run: |
          git clone --depth=1 https://github.com/eraselk/busybox-template
          
-      - name: anykernel ~ zipping
+      - name: Zipping
         run: |
          rm -f $PWD/busybox-template/system/xbin/*
          cp $PWD/libs/arm64-v8a/busybox $PWD/busybox-template/system/xbin/busybox-arm64
