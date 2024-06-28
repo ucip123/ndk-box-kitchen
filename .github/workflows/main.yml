@@ -1,0 +1,79 @@
+name: Build Busybox
+
+on:
+  workflow_dispatch:
+  watch:
+   types: [started]
+
+defaults:
+  run:
+   shell: bash
+
+jobs:
+ build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with: 
+          swap-size-gb: 5
+         
+      - name: setup package
+        run: |
+         sudo apt update -y && sudo apt upgrade -y && sudo apt install -y wget unzip zip git glibc-source
+         
+      - name: Download NDK
+        run: |
+         wget https://dl.google.com/android/repository/android-ndk-r27-beta2-linux.zip && unzip -q *.zip && rm *.zip && mv *ndk-r27* ndk && export PATH="$PWD/ndk:$PATH"
+
+      - name: Clone NDK Kitchen
+        run: |
+         git clone --depth=1 https://github.com/eraselk/ndk-box-kitchen ndk-kitchen
+
+      - name: cd into NDK Kitchen
+        run: |
+         cd ndk-kitchen
+         
+      - name: Export Variable
+        run: |
+         export NDK_PROJECT_PATH=$PWD
+         
+      - name: Clone & Checkout Busybox
+        run: |
+         git clone https://git.busybox.net/busybox && cd busybox && git checkout 1_36_1 && cd ..
+         
+      - name: Clone Modules
+        run: |
+         git clone --depth=1 https://github.com/eraselk/pcre jni/pcre && git clone --depth=1 https://github.com/eraselk/selinux jni/selinux
+         
+      - name: Apply patches and Generate Makefile
+        run: |
+         if ! [ -x "run.sh" ]; then
+         chmod +x run.sh
+         fi
+         bash run.sh patch && bash run.sh generate
+         
+      - name: Build
+        run: |
+         ndk-build all
+         
+      - name: Clone module template
+        run: |
+         git clone --depth=1 https://github.com/eraselk/busybox-template
+         
+      - name: anykernel ~ zipping
+        run: |
+         rm -f $PWD/busybox-template/system/xbin/*
+         cp $PWD/libs/arm64-v8a/busybox $PWD/busybox-template/system/xbin/busybox-arm64
+         cp $PWD/libs/armeabi-v7a/busybox $PWD/busybox-template/system/xbin/busybox-arm
+         cd $PWD/busybox-template && zip -r9 Busybox-v1.36.1-${{ github.run_id }}.zip *
+         
+      - name: upload to telegram
+        run: |
+         curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument" \
+         -F chat_id="${{ secrets.CHAT_ID }}" \
+         -F document=@"$PWD/Busybox-v1.36.1-${{ github.run_id }}.zip"
