@@ -35,7 +35,7 @@ jobs:
 
       - name: Export Variable
         run: |
-          export NDK_PROJECT_PATH=/home/runner/work/ndk-box-kitchen/ndk-box-kitchen
+          export NDK_PROJECT_PATH=$PWD
 
       - name: Clone & Checkout Busybox
         run: |
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build
         run: |
-          /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/ndk/ndk-build all
+          $PWD/ndk/ndk-build all
 
       - name: Clone Module Template
         run: |
@@ -67,16 +67,16 @@ jobs:
 
       - name: Zipping
         run: |
-          rm -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/.placeholder
-          cp /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/arm64-v8a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm64
-          cp /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/armeabi-v7a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm
-          cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template
+          rm -f $PWD/busybox-template/system/xbin/*
+          cp $PWD/libs/arm64-v8a/busybox $PWD/busybox-template/system/xbin/busybox-arm64
+          cp $PWD/libs/armeabi-v7a/busybox $PWD/busybox-template/system/xbin/busybox-arm
+          cd $PWD/busybox-template
           zip -r9 Busybox-v1.36.1-${{ github.run_id }}.zip *
-          mv -f Busybox-v1.36.1-${{ github.run_id }}.zip /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
-          cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
+          mv -f Busybox-v1.36.1-${{ github.run_id }}.zip ..
+          cd ..
 
       - name: Upload to Telegram
         run: |
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument" 
           -F chat_id="${{ secrets.CHAT_ID }}" 
-          -F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/Busybox-v1.36.1-${{ github.run_id }}.zip"
+          -F document=@"$PWD/Busybox-v1.36.1-${{ github.run_id }}.zip"
