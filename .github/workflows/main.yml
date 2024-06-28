@@ -3,14 +3,14 @@ name: Build Busybox
 on:
   workflow_dispatch:
   watch:
-   types: [started]
+    types: [started]
 
 defaults:
   run:
-   shell: bash
+    shell: bash
 
 jobs:
- build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,53 +19,61 @@ jobs:
 
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
-        with: 
+        with:
           swap-size-gb: 5
-         
-      - name: setup package
+
+      - name: Setup Package
         run: |
-         sudo apt update -y && sudo apt upgrade -y
-         
+          sudo apt update -y && sudo apt upgrade -y
+
       - name: Download NDK
         run: |
-         wget https://dl.google.com/android/repository/android-ndk-r27-beta2-linux.zip && unzip -q *.zip && rm *.zip && mv *ndk-r27* ndk
+          wget https://dl.google.com/android/repository/android-ndk-r27-beta2-linux.zip
+          unzip -q android-ndk-r27-beta2-linux.zip
+          rm android-ndk-r27-beta2-linux.zip
+          mv *ndk-r27* ndk
 
       - name: Export Variable
         run: |
-         export NDK_PROJECT_PATH=$PWD
-         
+          export NDK_PROJECT_PATH=$PWD
+
       - name: Clone & Checkout Busybox
         run: |
-         git clone https://git.busybox.net/busybox && cd busybox && git checkout 1_36_1 && cd ..
-         
+          git clone https://git.busybox.net/busybox
+          cd busybox
+          git checkout 1_36_1
+          cd ..
+
       - name: Clone Modules
         run: |
-         git clone --depth=1 https://github.com/eraselk/pcre jni/pcre && git clone --depth=1 https://github.com/eraselk/selinux jni/selinux
-         
-      - name: Apply patches and Generate Makefile
+          git clone --depth=1 https://github.com/eraselk/pcre jni/pcre
+          git clone --depth=1 https://github.com/eraselk/selinux jni/selinux
+
+      - name: Apply Patches and Generate Makefile
         run: |
-         if ! [ -x "run.sh" ]; then
-         chmod +x run.sh
-         fi
-         bash run.sh patch && bash run.sh generate
-         
+          if ! [ -x "run.sh" ]; then
+            chmod +x run.sh
+          fi
+          bash run.sh patch
+          bash run.sh generate
+
       - name: Build
         run: |
-         $PWD/ndk/ndk-build all
-         
-      - name: Clone module template
+          $PWD/ndk/ndk-build all
+
+      - name: Clone Module Template
         run: |
-         git clone --depth=1 https://github.com/eraselk/busybox-template
-         
+          git clone --depth=1 https://github.com/eraselk/busybox-template
+
       - name: Zipping
         run: |
-         rm -f $PWD/busybox-template/system/xbin/*
-         cp $PWD/libs/arm64-v8a/busybox $PWD/busybox-template/system/xbin/busybox-arm64
-         cp $PWD/libs/armeabi-v7a/busybox $PWD/busybox-template/system/xbin/busybox-arm
-         cd $PWD/busybox-template && zip -r9 Busybox-v1.36.1-${{ github.run_id }}.zip *
-         
-      - name: upload to telegram
+          rm -f $PWD/busybox-template/system/xbin/*
+          cp $PWD/libs/arm64-v8a/busybox $PWD/busybox-template/system/xbin/busybox-arm64
+          cp $PWD/libs/armeabi-v7a/busybox $PWD/busybox-template/system/xbin/busybox-arm
+          cd $PWD/busybox-template && zip -r9 Busybox-v1.36.1-${{ github.run_id }}.zip *
+
+      - name: Upload to Telegram
         run: |
-         curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument" \
-         -F chat_id="${{ secrets.CHAT_ID }}" \
-         -F document=@"$PWD/Busybox-v1.36.1-${{ github.run_id }}.zip"
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument" 
+          -F chat_id="${{ secrets.CHAT_ID }}" 
+          -F document=@"$PWD/Busybox-v1.36.1-${{ github.run_id }}.zip"
