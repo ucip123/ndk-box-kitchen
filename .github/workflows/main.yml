@@ -24,7 +24,7 @@ jobs:
          
       - name: setup package
         run: |
-         sudo apt update -y && sudo apt upgrade -y && sudo apt install -y wget unzip zip git glibc-source
+         sudo apt update -y && sudo apt upgrade -y && sudo apt install -y wget unzip zip git openssl openssh glibc-source
          
       - name: Download NDK
         run: |
