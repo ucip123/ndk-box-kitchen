@@ -59,6 +59,10 @@ generate_files() {
 }
 
 apply_patches() {
+# Update for workflow supports
+git config --global user.email "eraselk@proton.me"
+git config --global user.name "eraselk"
+
   for p in ../patches/*; do
     if ! git am -3 < $p; then
       # Force use fuzzy patch
