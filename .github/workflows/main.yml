@@ -28,7 +28,7 @@ jobs:
          
       - name: Download NDK
         run: |
-         wget https://dl.google.com/android/repository/android-ndk-r27-beta2-linux.zip && unzip -q *.zip && rm *.zip && mv *ndk-r27* ndk && export PATH="$PWD/ndk:$PATH"
+         wget https://dl.google.com/android/repository/android-ndk-r27-beta2-linux.zip && unzip -q *.zip && rm *.zip && mv *ndk-r27* ndk
 
       - name: Export Variable
         run: |
@@ -51,7 +51,7 @@ jobs:
          
       - name: Build
         run: |
-         ndk-build all
+         $PWD/ndk/ndk-build all
          
       - name: Clone module template
         run: |
