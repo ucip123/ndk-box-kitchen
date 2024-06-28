@@ -1,4 +1,4 @@
-l# ndk-box-kitchen
+# ndk-box-kitchen
 
 This repo is the kitchen used to create headers and Makefiles for building BusyBox with the command [`ndk-build`](https://developer.android.com/ndk/guides/ndk-build.html) in NDK. Scripts in this repo expect to run on Linux, however the generated code and Makefiles can be used on all NDK supported platforms.
 
