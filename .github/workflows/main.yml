@@ -27,5 +27,6 @@ jobs:
           export RUN_ID="${{ github.run_id }}"
           export TOKEN="${{ secrets.TG_TOKEN }}"
           export CHAT_ID="${{ secrets.CHAT_ID }}"
-          [[ ! -x "scripts/build.sh" ]] && chmod +x scripts/build.sh
-          scripts/build.sh
+          true
+          [[ ! -x "script/build.sh" ]] && chmod +x scripts/build.sh
+          script/build.sh
