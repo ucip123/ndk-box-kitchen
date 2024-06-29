@@ -21,10 +21,10 @@ fi
 sudo apt update -y && sudo apt upgrade -y
 
 # Download NDK
-wget https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip
+wget -q https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip
 unzip -q android-ndk-${NDK_VERSION}-linux.zip
-rm android-ndk-${NDK_VERSION}-linux.zip
-mv android-ndk-${NDK_VERSION} ndk
+rm -f android-ndk-${NDK_VERSION}-linux.zip
+mv -f android-ndk-${NDK_VERSION} ndk
 
 # Export Variable
 export NDK_PROJECT_PATH=/home/runner/work/ndk-box-kitchen/ndk-box-kitchen
