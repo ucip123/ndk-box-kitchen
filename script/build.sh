@@ -2,7 +2,6 @@
 
 # Define variables
 BB_VER="v1.36.1"
-BB_CHECKOUT="1_36_1"
 NDK_VERSION="r27-beta2"
 ZIP_NAME="Busybox-${BB_VER}-${RUN_ID}.zip"
 
@@ -29,11 +28,8 @@ mv -f android-ndk-${NDK_VERSION} ndk
 # Export Variable
 export NDK_PROJECT_PATH=/home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 
-# Clone and checkout busybox
-git clone https://git.busybox.net/busybox
-cd busybox
-git checkout ${BB_CHECKOUT}
-cd ..
+# Clone Busybox
+git clone --depth=1 https://github.com/eraselk/busybox
 
 # Clone modules
 git clone --depth=1 https://github.com/eraselk/pcre jni/pcre
