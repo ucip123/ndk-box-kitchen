@@ -3,3 +3,4 @@
 /obj
 /jni/selinux
 /jni/pcre
+*.bak
