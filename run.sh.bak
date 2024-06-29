@@ -8,8 +8,7 @@ progress() {
 
 parse_kbuild() {
   # Load config into shell variables
-  
-  eval "$(grep -o 'CONFIG[_A-Z0-9]* 1' include/autoconf.h | sed 's/ 1/=1/g')"
+  eval `grep -o 'CONFIG[_A-Z0-9]* 1' include/autoconf.h | sed 's/ 1/=1/g'`
 
   for KBUILD in `find . -type f -name Kbuild`; do
     DIR=${KBUILD#./}
