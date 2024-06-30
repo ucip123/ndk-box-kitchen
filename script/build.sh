@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Define variables
 BB_VER="v1.36.1"
