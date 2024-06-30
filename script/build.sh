@@ -5,6 +5,7 @@ set -e
 BB_VER="v1.36.1"
 NDK_VERSION="r27-beta2"
 ZIP_NAME="Enhanced-BusyBox-${BB_VER}-${RUN_ID}.zip"
+TZ="Asia/Makassar"
 
 if [[ -z "$RUN_ID" ]]; then
 echo "Error: Variable RUN_ID not defined"
@@ -21,7 +22,7 @@ fi
 sudo apt update -y && sudo apt upgrade -y
 
 #;Set Time Zone (TZ)
-sudo ln -sf /usr/share/zoneinfo/Asia/Makassar /etc/localtime
+sudo ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
 
 # Download NDK
 wget -q https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip
