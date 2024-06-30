@@ -2,18 +2,21 @@
 set -e
 
 # Define variables
-BB_VER="v1.36.1"
-NDK_VERSION="r27-beta2"
-ZIP_NAME="Enhanced-BusyBox-${BB_VER}-${RUN_ID}.zip"
-TZ="Asia/Makassar"
+export BB_VER="v1.36.1"
+export BB_BUILDER="eraselk@gacorprjkt"
+export NDK_VERSION="r27-beta2"
+export ZIP_NAME="Enhanced-BusyBox-${BB_VER}-${RUN_ID}.zip"
+export TZ="Asia/Makassar"
+export NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
 
-if [[ -z "$RUN_ID" ]]; then
-echo "Error: Variable RUN_ID not defined"
-exit 1
-elif [[ -z "$TOKEN" ]]; then
+# check $TOKEN
+if [[ -z "$TOKEN" ]]; then
 echo "Error: Variable TOKEN not defined"
 exit 1
-elif [[ -z "$CHAT_ID" ]]; then
+fi
+
+# check $CHAT_ID
+if [[ -z "$CHAT_ID" ]]; then
 echo "Error: Variable CHAT_ID not defined"
 exit 1
 fi
@@ -29,9 +32,6 @@ wget -q https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linu
 unzip -q android-ndk-${NDK_VERSION}-linux.zip
 rm -f android-ndk-${NDK_VERSION}-linux.zip
 mv -f android-ndk-${NDK_VERSION} ndk
-
-# Export Variable
-export NDK_PROJECT_PATH=/home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 
 # Clone Busybox
 git clone --depth=1 https://github.com/eraselk/busybox
