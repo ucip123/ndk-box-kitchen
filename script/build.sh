@@ -4,7 +4,7 @@ set -e
 # Define variables
 BB_VER="v1.36.1"
 NDK_VERSION="r27-beta2"
-ZIP_NAME="Busybox-${BB_VER}-${RUN_ID}.zip"
+ZIP_NAME="Enhanced-BusyBox-${BB_VER}-${RUN_ID}.zip"
 
 if [[ -z "$RUN_ID" ]]; then
 echo "Error: Variable RUN_ID not defined"
