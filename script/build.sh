@@ -20,6 +20,9 @@ fi
 # Package
 sudo apt update -y && sudo apt upgrade -y
 
+#;Set Time Zone (TZ)
+sudo ln -sf /usr/share/zoneinfo/Asia/Makassar /etc/localtime
+
 # Download NDK
 wget -q https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip
 unzip -q android-ndk-${NDK_VERSION}-linux.zip
