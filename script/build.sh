@@ -2,10 +2,11 @@
 set -e
 
 # Define variables
+export BB_NAME="Enhanced"
 export BB_VER="v1.36.1"
 export BB_BUILDER="eraselk@gacorprjkt"
 export NDK_VERSION="r27-beta2"
-export ZIP_NAME="Enhanced-BusyBox-${BB_VER}-${RUN_ID}.zip"
+export ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
 export TZ="Asia/Makassar"
 export NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
 
