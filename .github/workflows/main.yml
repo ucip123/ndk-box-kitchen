@@ -2,8 +2,8 @@ name: Build Busybox
 
 on:
   workflow_dispatch:
-  watch:
-    types: [started]
+    watch:
+      types: [started]
 
 defaults:
   run:
