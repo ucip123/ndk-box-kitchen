@@ -48,7 +48,7 @@ fi
 bash run.sh patch
 bash run.sh generate
 
-# Build busybox (arm64-v8a and armeabi-v7a)
+# Build busybox (arm64-v8a, armeabi-v7a, and x64)
 /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/ndk/ndk-build all
 
 # Clone Module Template
@@ -58,6 +58,7 @@ git clone --depth=1 https://github.com/eraselk/busybox-template
 rm -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/.placeholder
 cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/arm64-v8a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm64
 cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/armeabi-v7a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm
+cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86_64/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/module.prop
 
 # Zipping
@@ -70,3 +71,6 @@ cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F chat_id="${CHAT_ID}" \
 -F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}" 
+
+# Upload busybox x86_64 binary to bashupload.com
+curl -T /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox bashupload.com
