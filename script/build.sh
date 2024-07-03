@@ -61,7 +61,7 @@ cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/arm64-v8a/busybox /
 # armeabi-v7a
 cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/armeabi-v7a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm
 # x64
-cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86_64/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64
+#cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86_64/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64
 #
 sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/module.prop
 
@@ -77,4 +77,4 @@ curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}" 
 
 # Upload busybox x86_64 binary to bashupload.com
-curl -T /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64 bashupload.com
+#curl -T /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64 bashupload.com

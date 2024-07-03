@@ -1,4 +1,4 @@
-APP_ABI := armeabi-v7a arm64-v8a x86_64
+APP_ABI := armeabi-v7a arm64-v8a
 APP_PLATFORM := android-35
 APP_CFLAGS := -Wall -fomit-frame-pointer -Ofast -mllvm -polly -flto -fuse-ld=gold
 APP_LDFLAGS := -flto -Wl,--gc-sections -Wl,--as-needed
