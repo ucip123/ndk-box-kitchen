@@ -4,3 +4,4 @@
 /jni/selinux
 /jni/pcre
 *.bak
+.txt
