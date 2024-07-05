@@ -2,13 +2,16 @@
 set -e
 
 # Define variables
-export BB_NAME="Enhanced"
-export BB_VER="v1.36.1-1"
-export BB_BUILDER="eraselk@gacorprjkt"
-export NDK_VERSION="r27-beta2"
-export ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
-export TZ="Asia/Makassar"
-export NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
+BB_NAME="Enhanced"
+BB_VER="v1.36.1-1"
+BB_BUILDER="eraselk@gacorprjkt"
+NDK_VERSION="r27-beta2"
+ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
+TZ="Asia/Makassar"
+NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
+
+# export all variables
+export BB_NAME BB_VER BB_BUILDER NDK_VERSION ZIP_NAME TZ NDK_PROJECT_PATH
 
 # check $TOKEN
 if [[ -z "$TOKEN" ]]; then
