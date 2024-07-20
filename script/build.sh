@@ -3,9 +3,9 @@ set -e
 
 # Define variables
 BB_NAME="Enhanced"
-BB_VER="v1.36.1-1"
+BB_VER="v1.36.1-2"
 BB_BUILDER="eraselk@gacorprjkt"
-NDK_VERSION="r27-beta2"
+NDK_VERSION="r27"
 ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
 TZ="Asia/Makassar"
 NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
@@ -41,8 +41,8 @@ mv -f android-ndk-${NDK_VERSION} ndk
 git clone --depth=1 https://github.com/eraselk/busybox
 
 # Clone modules
-git clone --depth=1 https://github.com/eraselk/pcre jni/pcre
-git clone --depth=1 https://github.com/eraselk/selinux jni/selinux
+git clone --depth=1 https://android.googlesource.com/platform/external/selinux jni/selinux
+git clone --depth=1 https://android.googlesource.com/platform/external/pcre jni/pcre
 
 # Apply Patches and Generate Makefile
 if ! [[ -x "run.sh" ]]; then
@@ -68,6 +68,9 @@ cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/armeabi-v7a/busybox
 # x64
 cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86_64/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64
 
+# x86
+cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x86
+
 sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/module.prop
 
 # Zipping
@@ -80,6 +83,3 @@ cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F chat_id="${CHAT_ID}" \
 -F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}" 
-
-# Upload busybox x86_64 binary to bashupload.com
-curl -T /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-x64 bashupload.com
