@@ -1,7 +1,7 @@
 From fa9b786d8c34bcaf61a3dfdd20138c6172e02755 Mon Sep 17 00:00:00 2001
 From: Chris Renshaw <osm0sis@outlook.com>
 Date: Wed, 2 Dec 2015 23:44:06 -0400
-Subject: [PATCH 06/35] fix ether-wake, avoid ether_hostton and include
+Subject: fix ether-wake, avoid ether_hostton and include
  if_ether
 
 Patch by Tias Guns <tias@ulyssis.org>, based on 'no-ether_hostton' by Dan Drown
