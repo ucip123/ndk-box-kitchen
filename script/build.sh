@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+(
 
 # Define variables
 BB_NAME="Enhanced"
@@ -78,8 +78,13 @@ cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template
 zip -r9 ${ZIP_NAME} *
 mv -f ${ZIP_NAME} /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
 cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
+) | tee -a /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/build.log
 
 # Upload to Telegram
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F chat_id="${CHAT_ID}" \
--F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}" 
+-F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}"
+
+curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+-F chat_id="${CHAT_ID}" \
+-F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/build.log"

@@ -2,8 +2,7 @@ name: Build Busybox
 
 on:
   push:
-    watch:
-      types: [started]
+  workflow_dispatch:
 
 defaults:
   run:
