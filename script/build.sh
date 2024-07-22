@@ -1,90 +1,124 @@
 #!/usr/bin/env bash
-(
 
 # Define variables
 BB_NAME="Enhanced"
 BB_VER="v1.36.1-2"
 BB_BUILDER="eraselk@gacorprjkt"
 NDK_VERSION="r27"
+RUN_ID=${GITHUB_RUN_ID:-"local"}
 ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
 TZ="Asia/Makassar"
 NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
 
-# export all variables
+# Export all variables
 export BB_NAME BB_VER BB_BUILDER NDK_VERSION ZIP_NAME TZ NDK_PROJECT_PATH
 
-# check $TOKEN
+# Check if TOKEN is set
 if [[ -z "$TOKEN" ]]; then
-echo "Error: Variable TOKEN not defined"
-exit 1
+  echo "Error: Variable TOKEN not defined"
+  exit 1
 fi
 
-# check $CHAT_ID
+# Check if CHAT_ID is set
 if [[ -z "$CHAT_ID" ]]; then
-echo "Error: Variable CHAT_ID not defined"
-exit 1
+  echo "Error: Variable CHAT_ID not defined"
+  exit 1
 fi
 
-# Package
+# Update and upgrade packages
 sudo apt update -y && sudo apt upgrade -y
 
-#;Set Time Zone (TZ)
+# Set Time Zone (TZ)
 sudo ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime
 
 # Download NDK
 wget -q https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to download NDK"
+  exit 1
+fi
+
 unzip -q android-ndk-${NDK_VERSION}-linux.zip
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to unzip NDK"
+  exit 1
+fi
+
 rm -f android-ndk-${NDK_VERSION}-linux.zip
 mv -f android-ndk-${NDK_VERSION} ndk
 
 # Clone Busybox
 git clone --depth=1 https://github.com/eraselk/busybox
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to clone Busybox"
+  exit 1
+fi
 
 # Clone modules
 git clone --depth=1 https://android.googlesource.com/platform/external/selinux jni/selinux
 git clone --depth=1 https://android.googlesource.com/platform/external/pcre jni/pcre
 
-# Apply Patches and Generate Makefile
+# Apply patches and generate Makefile
 if ! [[ -x "run.sh" ]]; then
     chmod +x run.sh
 fi
-bash run.sh patch
-bash run.sh generate
 
-# Build busybox (arm64-v8a, armeabi-v7a, and x64)
-/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/ndk/ndk-build all
+bash run.sh patch
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to apply patches"
+  exit 1
+fi
+
+bash run.sh generate
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to generate Makefile"
+  exit 1
+fi
+
+# Build Busybox (arm64-v8a, armeabi-v7a, and x64)
+$NDK_PROJECT_PATH/ndk/ndk-build all
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to build Busybox"
+  exit 1
+fi
 
 # Clone Module Template
 git clone --depth=1 https://github.com/eraselk/busybox-template
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to clone Busybox template"
+  exit 1
+fi
 
-rm -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/.placeholder
+rm -f $NDK_PROJECT_PATH/busybox-template/system/xbin/.placeholder
 
-# arm64-v8a
-cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/arm64-v8a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm64
+# Copy binaries to template
+cp -f $NDK_PROJECT_PATH/libs/arm64-v8a/busybox $NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-arm64
+cp -f $NDK_PROJECT_PATH/libs/armeabi-v7a/busybox $NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-arm
+cp -f $NDK_PROJECT_PATH/libs/x86_64/busybox $NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-x64
+cp -f $NDK_PROJECT_PATH/libs/x86/busybox $NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-x86
 
-# armeabi-v7a
-cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/armeabi-v7a/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-arm
+# Update version in module.prop
+sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" $NDK_PROJECT_PATH/busybox-template/module.prop
 
-# x64
-cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86_64/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-x64
-
-# x86
-cp -f /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/libs/x86/busybox /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/system/xbin/busybox-x86
-
-sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template/module.prop
-
-# Zipping
-cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/busybox-template
+# Zip the template
+cd $NDK_PROJECT_PATH/busybox-template
 zip -r9 ${ZIP_NAME} *
-mv -f ${ZIP_NAME} /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
-cd /home/runner/work/ndk-box-kitchen/ndk-box-kitchen
-) | tee -a /home/runner/work/ndk-box-kitchen/ndk-box-kitchen/build.log
+mv -f ${ZIP_NAME} $NDK_PROJECT_PATH
+cd $NDK_PROJECT_PATH
 
 # Upload to Telegram
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F chat_id="${CHAT_ID}" \
--F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/${ZIP_NAME}"
+-F document=@${ZIP_NAME}
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to upload ZIP to Telegram"
+  exit 1
+fi
 
 curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 -F chat_id="${CHAT_ID}" \
--F document=@"/home/runner/work/ndk-box-kitchen/ndk-box-kitchen/build.log"
+-F document=@build.log
+if [[ $? -ne 0 ]]; then
+  echo "Error: Failed to upload build log to Telegram"
+  exit 1
+fi
