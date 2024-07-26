@@ -3,6 +3,7 @@
 # Define variables
 BB_NAME="Enhanced"
 BB_VER="v1.37.0.1"
+BUILD_TYPE="BETA"
 BB_BUILDER="eraselk@gacorprjkt"
 NDK_VERSION="r27"
 RUN_ID=${GITHUB_RUN_ID:-"local"}
@@ -28,24 +29,40 @@ if [[ -z "$CHAT_ID" ]]; then
 fi
 
 upload_file() {
-	curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+if [[ -z "$2" ]]; then
+    	curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
 		-F chat_id="${CHAT_ID}" \
-		-F document=@"$1"
+		-F document=@"$1" \
+		-o /dev/null
+else
+        curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+		-F chat_id="${CHAT_ID}" \
+		-F document=@"$1" \
+		-F caption="$2" \
+		-o /dev/null
+fi
 }
 
-{
-	echo
-	echo "================================="
-	echo "BB_NAME=$BB_NAME BusyBox"
-	echo "BB_VERSION=$BB_VER"
-	echo "BB_BUILDER=$BB_BUILDER"
-	echo "NDK_VERSION=$NDK_VERSION"
-	echo "ZIP_NAME=$ZIP_NAME"
-	echo "CPU_CORES=$(nproc --all)"
-	echo "================================="
-	echo
+send_msg() {
+    curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+    -d "chat_id=${CHAT_ID}" \
+    -d "text=$1" \
+    -o /dev/null
+}
 
-	sleep 1
+send_msg "BusyBox CI Trigerred"
+sleep 1
+send_msg "=================================
+BB_NAME=$BB_NAME BusyBox
+BB_VERSION=$BB_VER
+BUILD_TYPE=$BUILD_TYPE
+BB_BUILDER=$BB_BUILDER
+NDK_VERSION=$NDK_VERSION
+CPU_CORES=$(nproc --all)
+================================="
+
+(
+    START=$(date +"%s")
 
 	# Update and upgrade packages
 	sudo apt update -y && sudo apt upgrade -y
@@ -96,20 +113,19 @@ upload_file() {
 		zip -r9 ${ZIP_NAME} *
 		mv -f ${ZIP_NAME} $NDK_PROJECT_PATH
 		cd $NDK_PROJECT_PATH
-
-		echo
-		echo "================================="
-		echo "            BUILD SUCCES"
-		echo "================================="
-		echo
 	fi
-} | tee -a ${BUILD_LOG}
+	END=$(date +"%s")
+    DIFF=$((END - START))
+    export minutes=$((DIFF / 60))
+    export seconds=$((DIFF % 60))
+) | tee -a ${BUILD_LOG}
 
 # Upload to Telegram
 
 if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]]; then
-	upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}"
+	upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}" "Build took ${minutes}m ${seconds}s
+#${BUILD_TYPE} #${BB_NAME}BusyBox #${BB_VERSION}"
 	upload_file "${BUILD_LOG}"
 else
-	upload_file "${BUILD_LOG}"
+	upload_file "${BUILD_LOG}" "Build failed after ${minutes}m ${seconds}s"
 fi
