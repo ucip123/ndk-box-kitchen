@@ -99,7 +99,7 @@ upload_file() {
 
 		echo
 		echo "================================="
-		echo "            BUILD SUCCESS"
+		echo "            BUILD SUCCES"
 		echo "================================="
 		echo
 	fi
@@ -107,7 +107,7 @@ upload_file() {
 
 # Upload to Telegram
 
-if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]] && [[ "$BUILD_SUCCESS" == "1" ]]; then
+if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]]; then
 	upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}"
 	upload_file "${BUILD_LOG}"
 else
