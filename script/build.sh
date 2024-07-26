@@ -51,15 +51,15 @@ send_msg() {
 }
 
 send_msg "BusyBox CI Trigerred"
-sleep 1
-send_msg "=================================
+sleep 5
+send_msg "==========================
 BB_NAME=$BB_NAME BusyBox
 BB_VERSION=$BB_VER
 BUILD_TYPE=$BUILD_TYPE
 BB_BUILDER=$BB_BUILDER
 NDK_VERSION=$NDK_VERSION
 CPU_CORES=$(nproc --all)
-================================="
+=========================="
 
 (
     START=$(date +"%s")
