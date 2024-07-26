@@ -1,17 +1,17 @@
-From 1b95c833d8cda62bf79f0ec8da7cca8f3ea1e4d8 Mon Sep 17 00:00:00 2001
+From cce10cf4dc594a4ab7c17508680074f945ababdc Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Sun, 14 Jul 2024 16:55:01 -0700
-Subject: [PATCH 06/18] Add missing sigisemptyset implementation
+Subject: [PATCH 06/24] Add missing sigisemptyset implementation
 
 ---
  shell/hush.c | 9 +++++++++
  1 file changed, 9 insertions(+)
 
 diff --git a/shell/hush.c b/shell/hush.c
-index d111f0cc5..5fbceaae3 100644
+index 707b77c..fe6c1db 100644
 --- a/shell/hush.c
 +++ b/shell/hush.c
-@@ -1942,6 +1942,15 @@ enum {
+@@ -1961,6 +1961,15 @@ enum {
  		,
  };
  

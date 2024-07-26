@@ -1,17 +1,17 @@
-From 091ecfecb34cbc0724dedf07accc7d16880f69ca Mon Sep 17 00:00:00 2001
+From 501e9146fea1777776b862edd3af8d3ca935de73 Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Fri, 21 Jun 2024 03:09:47 -0700
-Subject: [PATCH 18/18] Allow variable page size on x64
+Subject: [PATCH 18/24] Allow variable page size on x64
 
 ---
  include/libbb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index 112e45197..401a8ec9a 100644
+index 4a62f1d..469e301 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -435,7 +435,7 @@ void *mmap_read(int fd, size_t size) FAST_FUNC;
+@@ -442,7 +442,7 @@ void *mmap_read(int fd, size_t size) FAST_FUNC;
  void *mmap_anon(size_t size) FAST_FUNC;
  void *xmmap_anon(size_t size) FAST_FUNC;
  

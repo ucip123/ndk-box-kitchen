@@ -1,7 +1,7 @@
-From 5e221150789917928c5c9a67f9fd8a76f9ef5cf6 Mon Sep 17 00:00:00 2001
+From 6a4cf189f159084adb3c0d26d0bb5b0895525cae Mon Sep 17 00:00:00 2001
 From: Chris Renshaw <osm0sis@outlook.com>
 Date: Wed, 19 Jul 2017 17:22:55 -0300
-Subject: fix udhcpc6: add missing ifaddrs.h and
+Subject: [PATCH 19/24] fix udhcpc6: add missing ifaddrs.h and
  getifaddrs/freeifaddrs functions
 
 ifaddrs implementation from 'android-ifaddrs' by Kenneth MacKay:
@@ -16,7 +16,7 @@ https://github.com/morristech/android-ifaddrs
  create mode 100644 networking/udhcp/ifaddrs.h
 
 diff --git a/networking/udhcp/d6_dhcpc.c b/networking/udhcp/d6_dhcpc.c
-index cdd06188e..498ea2690 100644
+index 79cef19..cfb9841 100644
 --- a/networking/udhcp/d6_dhcpc.c
 +++ b/networking/udhcp/d6_dhcpc.c
 @@ -48,6 +48,7 @@
@@ -28,7 +28,7 @@ index cdd06188e..498ea2690 100644
  //kbuild:lib-$(CONFIG_FEATURE_UDHCPC6_RFC4704) += domain_codec.o
  
 diff --git a/networking/udhcp/d6_socket.c b/networking/udhcp/d6_socket.c
-index acf108367..38de5d0d0 100644
+index acf1083..38de5d0 100644
 --- a/networking/udhcp/d6_socket.c
 +++ b/networking/udhcp/d6_socket.c
 @@ -7,7 +7,7 @@
@@ -42,7 +42,7 @@ index acf108367..38de5d0d0 100644
  int FAST_FUNC d6_read_interface(
 diff --git a/networking/udhcp/ifaddrs.c b/networking/udhcp/ifaddrs.c
 new file mode 100644
-index 000000000..338fff887
+index 0000000..338fff8
 --- /dev/null
 +++ b/networking/udhcp/ifaddrs.c
 @@ -0,0 +1,600 @@
@@ -648,7 +648,7 @@ index 000000000..338fff887
 +}
 diff --git a/networking/udhcp/ifaddrs.h b/networking/udhcp/ifaddrs.h
 new file mode 100644
-index 000000000..9cd19fec1
+index 0000000..9cd19fe
 --- /dev/null
 +++ b/networking/udhcp/ifaddrs.h
 @@ -0,0 +1,54 @@

@@ -1,7 +1,7 @@
-From 9cf0fa6cd156d864a738c21d34ee273392c56dfc Mon Sep 17 00:00:00 2001
+From 365db9d3bc88b0209b9c392c45a8c7ca26e14525 Mon Sep 17 00:00:00 2001
 From: Tias Guns <tias@ulyssis.org>
 Date: Tue, 20 Mar 2012 21:26:07 +0000
-Subject: [PATCH 03/18] fix ipcs, ipcrm no sys/sem-shm-msg, etc
+Subject: [PATCH 03/24] fix ipcs, ipcrm no sys/sem-shm-msg, etc
 
 patch from 'no-sys-shm,msg,sem' by Dan Drown
 http://dan.drown.org/android/src/busybox/
@@ -13,7 +13,7 @@ Signed-off-by: Tias Guns <tias@ulyssis.org>
  2 files changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/util-linux/ipcrm.c b/util-linux/ipcrm.c
-index 3d3ad0b56..a97f39f29 100644
+index 126221c..1b370da 100644
 --- a/util-linux/ipcrm.c
 +++ b/util-linux/ipcrm.c
 @@ -28,7 +28,8 @@
@@ -27,7 +27,7 @@ index 3d3ad0b56..a97f39f29 100644
  #else
  /* according to X/OPEN we have to define it ourselves */
 diff --git a/util-linux/ipcs.c b/util-linux/ipcs.c
-index 5973cbf57..2e43b7758 100644
+index f0e5c5a..1375bfa 100644
 --- a/util-linux/ipcs.c
 +++ b/util-linux/ipcs.c
 @@ -71,7 +71,8 @@ struct shm_info {

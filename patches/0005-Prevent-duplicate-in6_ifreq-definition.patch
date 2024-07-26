@@ -1,7 +1,7 @@
-From 79bdb8978e9ffcfc4799ed00206602d5e57b5844 Mon Sep 17 00:00:00 2001
+From 2d66637ff2df9760136f15048bd6ca2fc4ecf82b Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Sun, 14 Jul 2024 16:54:36 -0700
-Subject: [PATCH 05/18] Prevent duplicate in6_ifreq definition
+Subject: [PATCH 05/24] Prevent duplicate in6_ifreq definition
 
 ---
  networking/ifconfig.c  | 8 --------
@@ -9,7 +9,7 @@ Subject: [PATCH 05/18] Prevent duplicate in6_ifreq definition
  2 files changed, 1 insertion(+), 9 deletions(-)
 
 diff --git a/networking/ifconfig.c b/networking/ifconfig.c
-index 9ee232a66..06898b6d2 100644
+index 9ee232a..06898b6 100644
 --- a/networking/ifconfig.c
 +++ b/networking/ifconfig.c
 @@ -127,14 +127,6 @@
@@ -28,7 +28,7 @@ index 9ee232a66..06898b6d2 100644
   * Here are the bit masks for the "flags" member of struct options below.
   * N_ signifies no arg prefix; M_ signifies arg prefixed by '-'.
 diff --git a/networking/interface.c b/networking/interface.c
-index 6b6c0944a..cf48733da 100644
+index 6b6c094..cf48733 100644
 --- a/networking/interface.c
 +++ b/networking/interface.c
 @@ -54,7 +54,7 @@

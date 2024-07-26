@@ -1,7 +1,7 @@
-From c8bb9c74dc742750681f349b7e8bea9799745153 Mon Sep 17 00:00:00 2001
+From ecc20518110fdd197af449f5212248ca2f904d35 Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Mon, 15 Jul 2024 17:20:17 -0700
-Subject: [PATCH] Use bionic libresolv for nslookup
+Subject: [PATCH 23/24] Use bionic libresolv for nslookup
 
 ---
  networking/bionic_resolv.h | 112 +++++++++++++++++++++++++++++++++++++
@@ -128,10 +128,10 @@ index 0000000..a15cb58
 +extern struct __res_state *__res_get_state(void);
 +#define _res (*__res_get_state())
 diff --git a/networking/nslookup.c b/networking/nslookup.c
-index 8c20d83..91bf072 100644
+index efe097e..c849098 100644
 --- a/networking/nslookup.c
 +++ b/networking/nslookup.c
-@@ -41,6 +41,9 @@
+@@ -43,6 +43,9 @@
  #include "../libres/dietdns.h"
  #include "libbb.h"
  #include "common_bufsiz.h"
@@ -139,9 +139,9 @@ index 8c20d83..91bf072 100644
 +#include "bionic_resolv.h"
 +#endif
  
- 
- #if !ENABLE_FEATURE_NSLOOKUP_BIG
-@@ -148,8 +151,9 @@ static void server_print(void)
+ /*
+  * Mini nslookup implementation for busybox
+@@ -147,8 +150,9 @@ static void server_print(void)
  	char *server;
  	struct sockaddr *sa;
  
@@ -153,7 +153,7 @@ index 8c20d83..91bf072 100644
  	if (!sa)
  #endif
  		sa = (struct sockaddr*)&_diet_res.nsaddr_list[0];
-@@ -167,8 +171,9 @@ static void set_default_dns(const char *server)
+@@ -166,8 +170,9 @@ static void set_default_dns(const char *server)
  {
  	len_and_sockaddr *lsa;
  
@@ -164,7 +164,7 @@ index 8c20d83..91bf072 100644
  
  	/* NB: this works even with, say, "[::1]:5353"! :) */
  	lsa = xhost2sockaddr(server, 53);
-@@ -178,21 +183,16 @@ static void set_default_dns(const char *server)
+@@ -177,21 +182,16 @@ static void set_default_dns(const char *server)
  		/* struct copy */
  		_diet_res.nsaddr_list[0] = lsa->u.sin;
  	}
@@ -193,7 +193,7 @@ index 8c20d83..91bf072 100644
  }
  
  int nslookup_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
-@@ -206,9 +206,6 @@ int nslookup_main(int argc, char **argv)
+@@ -205,9 +205,6 @@ int nslookup_main(int argc, char **argv)
  	if (!argv[1] || argv[1][0] == '-' || argc > 3)
  		bb_show_usage();
  

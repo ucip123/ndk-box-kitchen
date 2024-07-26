@@ -1,7 +1,7 @@
-From 6e402158a42bab0f1f45053d356beb8ec8d8e615 Mon Sep 17 00:00:00 2001
+From bd61d5e351055b894a63d7eb63d5da6864348716 Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Sat, 2 Sep 2023 05:21:13 -0700
-Subject: [PATCH 14/18] Replace rename(2) with direct system call
+Subject: [PATCH 14/24] Replace rename(2) with direct system call
 
 NDK r26 introduced the following change:
 https://android-review.googlesource.com/c/platform/bionic/+/2240019
@@ -15,7 +15,7 @@ We would love to support kernel versions lower than 3.15
  1 file changed, 14 insertions(+)
 
 diff --git a/libbb/wrap_funcs.c b/libbb/wrap_funcs.c
-index d4548859a..e6a13667f 100644
+index d454885..e6a1366 100644
 --- a/libbb/wrap_funcs.c
 +++ b/libbb/wrap_funcs.c
 @@ -28,11 +28,13 @@

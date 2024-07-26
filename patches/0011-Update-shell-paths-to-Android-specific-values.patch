@@ -1,7 +1,7 @@
-From 7d82ae116d7c3a3aa6d9048574fdf0564d513378 Mon Sep 17 00:00:00 2001
+From 5719b506eaea985f362c9beb5828b3f3060aec12 Mon Sep 17 00:00:00 2001
 From: topjohnwu <topjohnwu@gmail.com>
 Date: Mon, 15 Jul 2024 17:44:50 -0700
-Subject: [PATCH 11/18] Update shell paths to Android specific values
+Subject: [PATCH 11/24] Update shell paths to Android specific values
 
 ---
  include/libbb.h        | 4 ++--
@@ -11,10 +11,10 @@ Subject: [PATCH 11/18] Update shell paths to Android specific values
  4 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index 87dd74e48..112e45197 100644
+index 8b1d49f..4a62f1d 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -2341,12 +2341,12 @@ void XZALLOC_CONST_PTR(const void *pptr, size_t size) FAST_FUNC;
+@@ -2365,12 +2365,12 @@ void XZALLOC_CONST_PTR(const void *pptr, size_t size) FAST_FUNC;
   * use bb_default_login_shell and following defines.
   * If you change LIBBB_DEFAULT_LOGIN_SHELL,
   * don't forget to change increment constant. */
@@ -30,7 +30,7 @@ index 87dd74e48..112e45197 100644
  /* The following devices are the same on all systems.  */
  #define CURRENT_TTY "/dev/tty"
 diff --git a/init/init.c b/init/init.c
-index 1e1ce833d..57129e9c2 100644
+index 2ee1e4c..856a6cf 100644
 --- a/init/init.c
 +++ b/init/init.c
 @@ -1106,7 +1106,7 @@ int init_main(int argc UNUSED_PARAM, char **argv)
@@ -43,7 +43,7 @@ index 1e1ce833d..57129e9c2 100644
  	/* Linux kernel sets HOME="/" when execing init,
  	 * and it can be overridden (but not unset?) on kernel's command line.
 diff --git a/libbb/get_shell_name.c b/libbb/get_shell_name.c
-index 5aebe9cdc..5af53bdda 100644
+index 5aebe9c..5af53bd 100644
 --- a/libbb/get_shell_name.c
 +++ b/libbb/get_shell_name.c
 @@ -17,6 +17,10 @@ const char* FAST_FUNC get_shell_name(void)
@@ -58,10 +58,10 @@ index 5aebe9cdc..5af53bdda 100644
  	if (pw && pw->pw_shell && pw->pw_shell[0])
  		return pw->pw_shell;
 diff --git a/shell/ash.c b/shell/ash.c
-index 9344e4de1..19eed5451 100644
+index bbd7307..9d9322d 100644
 --- a/shell/ash.c
 +++ b/shell/ash.c
-@@ -14537,7 +14537,7 @@ procargs(char **argv)
+@@ -14581,7 +14581,7 @@ procargs(char **argv)
  	int login_sh;
  
  	xargv = argv;
@@ -70,7 +70,7 @@ index 9344e4de1..19eed5451 100644
  #if NUM_SCRIPTS > 0
  	if (minusc)
  		goto setarg0;
-@@ -14713,7 +14713,7 @@ int ash_main(int argc UNUSED_PARAM, char **argv)
+@@ -14757,7 +14757,7 @@ int ash_main(int argc UNUSED_PARAM, char **argv)
  		const char *hp;
  
  		state = 1;

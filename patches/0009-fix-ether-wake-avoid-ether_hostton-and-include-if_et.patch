@@ -1,7 +1,7 @@
-From fa9b786d8c34bcaf61a3dfdd20138c6172e02755 Mon Sep 17 00:00:00 2001
+From 0c5441c103720db1727f4845d640ffb2e43744e6 Mon Sep 17 00:00:00 2001
 From: Chris Renshaw <osm0sis@outlook.com>
 Date: Wed, 2 Dec 2015 23:44:06 -0400
-Subject: fix ether-wake, avoid ether_hostton and include
+Subject: [PATCH 09/24] fix ether-wake, avoid ether_hostton and include
  if_ether
 
 Patch by Tias Guns <tias@ulyssis.org>, based on 'no-ether_hostton' by Dan Drown
@@ -13,7 +13,7 @@ Rebased for busybox 1.24.1 by Chris Renshaw <osm0sis@outlook.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/networking/ether-wake.c b/networking/ether-wake.c
-index 809c0d9f0..920f0c4a0 100644
+index c1b680c..7c40cfe 100644
 --- a/networking/ether-wake.c
 +++ b/networking/ether-wake.c
 @@ -87,6 +87,7 @@

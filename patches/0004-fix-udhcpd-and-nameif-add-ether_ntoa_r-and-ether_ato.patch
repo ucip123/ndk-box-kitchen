@@ -1,7 +1,7 @@
-From b454f643056e7b0e7799f202370e0a2ec3893665 Mon Sep 17 00:00:00 2001
+From 0865d84ef1b31e0e6e86335622efdea032f7436d Mon Sep 17 00:00:00 2001
 From: Chris Renshaw <osm0sis@outlook.com>
 Date: Tue, 10 Jan 2017 10:24:29 -0400
-Subject: fix udhcpd and nameif, add ether_ntoa_r and
+Subject: [PATCH 04/24] fix udhcpd and nameif, add ether_ntoa_r and
  ether_aton_r from glibc
 
 this patch also fixes part of arping and ether-wake, but not sufficiently yet
@@ -24,7 +24,7 @@ Rebased for busybox 1.26.1 by Chris Renshaw <osm0sis@outlook.com>
  create mode 100644 networking/ether_port.h
 
 diff --git a/networking/arping.c b/networking/arping.c
-index 86f0221ed..6a1b8bae1 100644
+index 967f1ac..9f01e70 100644
 --- a/networking/arping.c
 +++ b/networking/arping.c
 @@ -14,6 +14,7 @@
@@ -36,7 +36,7 @@ index 86f0221ed..6a1b8bae1 100644
  //usage:#define arping_trivial_usage
  //usage:       "[-fqbDUA] [-c CNT] [-w TIMEOUT] [-I IFACE] [-s SRC_IP] DST_IP"
 diff --git a/networking/ether-wake.c b/networking/ether-wake.c
-index 36e90acfb..809c0d9f0 100644
+index 68df193..c1b680c 100644
 --- a/networking/ether-wake.c
 +++ b/networking/ether-wake.c
 @@ -72,6 +72,7 @@
@@ -66,7 +66,7 @@ index 36e90acfb..809c0d9f0 100644
  		bb_show_usage();
 diff --git a/networking/ether_aton_r.c b/networking/ether_aton_r.c
 new file mode 100644
-index 000000000..0215f16d4
+index 0000000..0215f16
 --- /dev/null
 +++ b/networking/ether_aton_r.c
 @@ -0,0 +1,63 @@
@@ -135,7 +135,7 @@ index 000000000..0215f16d4
 +}
 diff --git a/networking/ether_ntoa_r.c b/networking/ether_ntoa_r.c
 new file mode 100644
-index 000000000..cd5061434
+index 0000000..cd50614
 --- /dev/null
 +++ b/networking/ether_ntoa_r.c
 @@ -0,0 +1,33 @@
@@ -174,7 +174,7 @@ index 000000000..cd5061434
 +}
 diff --git a/networking/ether_port.h b/networking/ether_port.h
 new file mode 100644
-index 000000000..5e0146b29
+index 0000000..5e0146b
 --- /dev/null
 +++ b/networking/ether_port.h
 @@ -0,0 +1,29 @@
@@ -208,7 +208,7 @@ index 000000000..5e0146b29
 +
 +#endif /* ETHER_PORT_H */
 diff --git a/networking/nameif.c b/networking/nameif.c
-index 66e042688..15a7b9c94 100644
+index 461745c..b51c869 100644
 --- a/networking/nameif.c
 +++ b/networking/nameif.c
 @@ -41,6 +41,7 @@
@@ -220,7 +220,7 @@ index 66e042688..15a7b9c94 100644
  //usage:#define nameif_trivial_usage
  //usage:	IF_NOT_FEATURE_NAMEIF_EXTENDED(
 diff --git a/networking/udhcp/Kbuild.src b/networking/udhcp/Kbuild.src
-index fcb725fbc..2d5739c7e 100644
+index fcb725f..2d5739c 100644
 --- a/networking/udhcp/Kbuild.src
 +++ b/networking/udhcp/Kbuild.src
 @@ -14,6 +14,7 @@ lib-$(CONFIG_UDHCPD)     += common.o packet.o signalpipe.o socket.o
@@ -232,7 +232,7 @@ index fcb725fbc..2d5739c7e 100644
  lib-$(CONFIG_DHCPRELAY)  += dhcprelay.o common.o socket.o packet.o
  
 diff --git a/networking/udhcp/dhcpd.c b/networking/udhcp/dhcpd.c
-index 66750e2e6..aeebb12f3 100644
+index 2904119..9748323 100644
 --- a/networking/udhcp/dhcpd.c
 +++ b/networking/udhcp/dhcpd.c
 @@ -40,8 +40,12 @@

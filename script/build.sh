@@ -2,7 +2,7 @@
 
 # Define variables
 BB_NAME="Enhanced"
-BB_VER="v1.36.1-3"
+BB_VER="v1.37.0.1"
 BB_BUILDER="eraselk@gacorprjkt"
 NDK_VERSION="r27"
 RUN_ID=${GITHUB_RUN_ID:-"local"}
@@ -60,15 +60,9 @@ fi
   git clone --depth=1 https://android.googlesource.com/platform/external/selinux jni/selinux
   git clone --depth=1 https://android.googlesource.com/platform/external/pcre jni/pcre
 
-  # Apply patches and generate Makefile
+  # generate Makefile
   if ! [[ -x "run.sh" ]]; then
       chmod +x run.sh
-  fi
-
-  bash run.sh patch
-  if [[ $? -ne 0 ]]; then
-    echo "Error: Failed to apply patches"
-    exit 1
   fi
 
   bash run.sh generate
