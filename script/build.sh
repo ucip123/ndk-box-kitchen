@@ -61,8 +61,8 @@ NDK_VERSION=$NDK_VERSION
 CPU_CORES=$(nproc --all)
 =========================="
 
+START=$(date +"%s")
 (
-    START=$(date +"%s")
 
 	# Update and upgrade packages
 	sudo apt update -y && sudo apt upgrade -y
@@ -114,17 +114,17 @@ CPU_CORES=$(nproc --all)
 		mv -f ${ZIP_NAME} $NDK_PROJECT_PATH
 		cd $NDK_PROJECT_PATH
 	fi
-	END=$(date +"%s")
-    DIFF=$((END - START))
-    export minutes=$((DIFF / 60))
-    export seconds=$((DIFF % 60))
 ) | tee -a ${BUILD_LOG}
-
+END=$(date +"%s")
+DIFF=$((END - START))
+export minutes=$((DIFF / 60))
+export seconds=$((DIFF % 60))
+    
 # Upload to Telegram
 
 if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]]; then
 	upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}" "Build took ${minutes}m ${seconds}s
-#${BUILD_TYPE} #${BB_NAME}BusyBox #${BB_VERSION}"
+#${BUILD_TYPE} #${BB_NAME}BusyBox #${BB_VER}"
 	upload_file "${BUILD_LOG}"
 else
 	upload_file "${BUILD_LOG}" "Build failed after ${minutes}m ${seconds}s"
