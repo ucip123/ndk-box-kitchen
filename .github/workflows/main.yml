@@ -23,11 +23,11 @@ jobs:
           [[ ! -x "script/build.sh" ]] && chmod +x script/build.sh
           script/build.sh
 
-      - uses: appleboy/telegram-action@master
       - name: Upload Telegram
+        uses: appleboy/telegram-action@master
         with : 
-        to: ${{ secrets.CHAT_ID }}
-        token: ${{ secrets.TG_TOKEN }}
-        message: "$ZIP_NAME"
-        document: "$NDK_PROJECT_PATH/$ZIP_NAME"
+          to: ${{ secrets.CHAT_ID }}
+          token: ${{ secrets.TG_TOKEN }}
+          message: "$ZIP_NAME"
+          document: "$NDK_PROJECT_PATH/$ZIP_NAME"
     
