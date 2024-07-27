@@ -30,29 +30,37 @@ if [[ -z "${CHAT_ID}" ]]; then
 fi
 
 upload_file() {
-    if [[ -z "$2" ]]; then
-        curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
-            -F "chat_id=${CHAT_ID}" \
-            -F "document=@${1}" \
-            -o /dev/null
+    local file_path=$1
+    local caption=$2
+
+    local response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+        -F "chat_id=${CHAT_ID}" \
+        -F "document=@${file_path}" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=html" \
+        -F "caption=${caption}")
+
+    if [[ "${response}" != "200" ]]; then
+        echo "Failed to upload file: ${file_path} with response code: ${response}"
     else
-        curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendDocument" \
-            -F "chat_id=${CHAT_ID}" \
-            -F "document=@${1}" \
-            -F "disable_web_page_preview=true" \
-            -F "parse_mode=html" \
-            -F "caption=${2}" \
-            -o /dev/null
+        echo "Successfully uploaded file: ${file_path}"
     fi
 }
 
 send_msg() {
-    curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+    local message=$1
+
+    local response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
         -d "chat_id=${CHAT_ID}" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=html" \
-        -d "text=${1}" \
-        -o /dev/null
+        -d "text=${message}")
+
+    if [[ "${response}" != "200" ]]; then
+        echo "Failed to send message with response code: ${response}"
+    else
+        echo "Message sent successfully"
+    fi
 }
 
 send_msg "<b>BusyBox CI Triggered</b>"
