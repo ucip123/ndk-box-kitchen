@@ -21,15 +21,14 @@ export BB_NAME BB_VER BB_BUILDER NDK_VERSION ZIP_NAME TZ NDK_PROJECT_PATH
 # Check if TOKEN is set
 if [[ -z ${TOKEN} ]]; then
 	echo "Error: Variable TOKEN not defined"
-	exit 1
+        exit 1
 fi
 
 # Check if CHAT_ID is set
 if [[ -z ${CHAT_ID} ]]; then
 	echo "Error: Variable CHAT_ID not defined"
-	exit 1
+        exit 1
 fi
-
 upload_file() {
 	local file_path=$1
 	local caption=$2
@@ -37,14 +36,11 @@ upload_file() {
 	if [[ -n $caption ]]; then
 		curl -s -F document=@"${file_path}" "https://api.telegram.org/bot$TOKEN/sendDocument" \
 			-F chat_id="$CHAT_ID" \
-			-F "disable_web_page_preview=true" \
 			-F "parse_mode=html" \
-			-F caption="$caption" \
-			-o /dev/null
+			-F caption="$caption"
 	else
 		curl -s -F document=@"${file_path}" "https://api.telegram.org/bot$TOKEN/sendDocument" \
-			-F chat_id="$CHAT_ID" \
-			-o /dev/null
+			-F chat_id="$CHAT_ID"
 	fi
 }
 
@@ -53,10 +49,8 @@ send_msg() {
 
 	curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
 		-d chat_id="$CHAT_ID" \
-		-d "disable_web_page_preview=true" \
 		-d "parse_mode=html" \
-		-d text="$message" \
-		-o /dev/null
+		-d text="$message"
 }
 
 send_msg "<b>BusyBox CI Triggered</b>"
