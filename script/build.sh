@@ -135,7 +135,7 @@ seconds=$((DIFF % 60))
 if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]]; then
     upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}" "<b>Build took ${minutes}m ${seconds}s</b>
 #${BUILD_TYPE} #${BB_NAME}BusyBox #${VERSION_CODE}"
-    upload_file "${BUILD_LOG}"
+    upload_file "${BUILD_LOG}" "<b>Build log for ${BB_NAME} ${BB_VER}</b>"
 else
     upload_file "${BUILD_LOG}" "<b>Build failed after ${minutes}m ${seconds}s</b>"
 fi
