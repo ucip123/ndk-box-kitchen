@@ -11,7 +11,8 @@ ZIP_NAME="${BB_NAME}-BusyBox-${BB_VER}-${RUN_ID}.zip"
 TZ="Asia/Makassar"
 NDK_PROJECT_PATH="/home/runner/work/ndk-box-kitchen/ndk-box-kitchen"
 BUILD_LOG="${NDK_PROJECT_PATH}/build.log"
-VERSION_CODE="$(echo "${BB_VER}" | tr -d 'v.')"
+VERSION_CODE="${BB_VER//v/}"
+VERSION_CODE="${VERSION_CODE//./}"
 BUILD_SUCCESS=""
 
 # Export all variables
@@ -76,34 +77,24 @@ CPU_CORES=$(nproc --all)
 
 START=$(date +"%s")
 (
-    # Update and upgrade packages
     sudo apt update -y && sudo apt upgrade -y
-
-    # Set Time Zone (TZ)
     sudo ln -sf "/usr/share/zoneinfo/${TZ}" /etc/localtime
 
-    # Download and unzip NDK
     curl -sL "https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip" -o android-ndk-${NDK_VERSION}-linux.zip
     unzip -q android-ndk-${NDK_VERSION}-linux.zip
     rm -f android-ndk-${NDK_VERSION}-linux.zip
     mv -f android-ndk-${NDK_VERSION} ndk
 
-    # Clone Busybox and modules
     git clone --depth=1 https://github.com/eraselk/busybox || { echo "Failed to clone Busybox"; exit 1; }
     git clone --depth=1 https://android.googlesource.com/platform/external/selinux jni/selinux || { echo "Failed to clone selinux"; exit 1; }
     git clone --depth=1 https://android.googlesource.com/platform/external/pcre jni/pcre || { echo "Failed to clone pcre"; exit 1; }
 
-    # Generate Makefile
-    if ! [[ -x "run.sh" ]]; then
-        chmod +x run.sh
-    fi
+    [[ -x "run.sh" ]] || chmod +x run.sh
 
     bash run.sh generate || { echo "Failed to generate Makefile"; exit 1; }
 
-    # Build Busybox (arm64-v8a, armeabi-v7a, and x64)
     $NDK_PROJECT_PATH/ndk/ndk-build all -j"$(nproc --all)" && BUILD_SUCCESS=1 || BUILD_SUCCESS=0
 
-    # Clone Module Template and update binaries
     if [[ "${BUILD_SUCCESS}" == "1" ]]; then
         git clone --depth=1 https://github.com/eraselk/busybox-template || { echo "Failed to clone Busybox template"; exit 1; }
 
@@ -114,11 +105,9 @@ START=$(date +"%s")
         cp -f "$NDK_PROJECT_PATH/libs/x86_64/busybox" "$NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-x64"
         cp -f "$NDK_PROJECT_PATH/libs/x86/busybox" "$NDK_PROJECT_PATH/busybox-template/system/xbin/busybox-x86"
 
-        # Update version in module.prop
         sed -i "s/version=.*/version=${BB_VER}-${RUN_ID}/" "$NDK_PROJECT_PATH/busybox-template/module.prop"
         sed -i "s/versionCode=.*/versionCode=${VERSION_CODE}/" "$NDK_PROJECT_PATH/busybox-template/module.prop"
 
-        # Zip the template
         cd "$NDK_PROJECT_PATH/busybox-template"
         zip -r9 "${ZIP_NAME}" *
         mv -f "${ZIP_NAME}" "$NDK_PROJECT_PATH"
@@ -131,7 +120,6 @@ DIFF=$((END - START))
 minutes=$((DIFF / 60))
 seconds=$((DIFF % 60))
 
-# Upload to Telegram
 if [[ -f "${NDK_PROJECT_PATH}/${ZIP_NAME}" ]]; then
     upload_file "${NDK_PROJECT_PATH}/${ZIP_NAME}" "<b>Build took ${minutes}m ${seconds}s</b>
 #${BUILD_TYPE} #${BB_NAME}BusyBox #${VERSION_CODE}"
